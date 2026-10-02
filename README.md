@@ -1,4 +1,4 @@
-# Seguridad de Redes - Implementación y Validación de Túnel IPsec Site-to-Site Heterogéneo (Cisco & FortiGate)
+# Seguridad de Redes - Implementación y Validación de Túnel IPsec Site-to-Site (Cisco & FortiGate)
 # ENLACE HACIA VIDEO: https://youtu.be/1OI2it4toN4
 ## 📌 Datos Generales
 
