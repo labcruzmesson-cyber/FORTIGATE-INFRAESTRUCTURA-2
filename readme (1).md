@@ -1,5 +1,5 @@
 # Seguridad de Redes - Implementación y Validación de Túnel IPsec Site-to-Site Heterogéneo (Cisco & FortiGate)
-
+# ENLACE HACIA VIDEO: https://youtu.be/1OI2it4toN4
 ## 📌 Datos Generales
 
 * **Autor:** Manuel Alejandro Cruz Messón
@@ -10,33 +10,7 @@
 ---
 
 ## 🗺️ Topología de Red
-
-```text
-                  +--------------------+
-                  |        ISP         |
-                  +----+----------+----+
-                       |          |
-               (Gi0/1) |          | (port1)
-             +---------+--+    +--+----------+
-             |    vIOS    |    |  Fortigate2 |
-             |   (Cisco)  |    |  (FortiOS)  |
-             +---------+--+    +--+----------+
-               (Gi0/0) |          | (port2)
-                       |          |
-               (Gi0/0) |          | (e0)
-             +---------+--+    +--+----------+
-             |   Switch   |    | Linux Server|
-             +---------+--+    | (Nginx/Web) |
-               (Gi0/1) |       +-------------+
-                       |
-                  (e0) |
-             +---------+--+
-             | TinyCore   |
-             |  (Linux)   |
-             +------------+
-```
-
----
+![Topología de Red](https://raw.githubusercontent.com/labcruzmesson-cyber/FORTIGATE-INFRAESTRUCTURA-2/refs/heads/main/IMAGES/Screenshot%202026-10-02%20144425.png)
 
 ## 1. Diseño de Direccionamiento IP y VLSM
 
