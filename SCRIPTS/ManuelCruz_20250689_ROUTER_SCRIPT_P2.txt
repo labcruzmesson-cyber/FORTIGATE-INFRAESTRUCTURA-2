@@ -1,0 +1,68 @@
+enable
+configure terminal
+
+hostname R1-CISCO
+
+ip dhcp excluded-address 10.25.6.1 10.25.6.9
+ip dhcp pool VLAN10_USERS
+ network 10.25.6.0 255.255.255.128
+ default-router 10.25.6.1
+ dns-server 8.8.8.8
+exit
+
+interface GigabitEthernet0/0
+ no ip address
+ no shutdown
+exit
+
+interface GigabitEthernet0/0.10
+ encapsulation dot1Q 10
+ ip address 10.25.6.1 255.255.255.128
+ ip nat inside
+exit
+
+interface GigabitEthernet0/1
+ ip address 192.168.145.150 255.255.255.0
+ ip nat outside
+ no shutdown
+exit
+
+ip route 0.0.0.0 0.0.0.0 192.168.145.1
+
+ip access-list extended ACL_VPN_INTERESANTE
+ permit ip 10.25.6.0 0.0.0.127 172.25.6.0 0.0.0.15
+exit
+
+ip access-list extended ACL_NAT
+ deny ip 10.25.6.0 0.0.0.127 172.25.6.0 0.0.0.15
+ permit ip 10.25.6.0 0.0.0.127 any
+exit
+
+ip nat inside source list ACL_NAT interface GigabitEthernet0/1 overload
+
+crypto isakmp policy 10
+ encr des
+ hash sha
+ authentication pre-share
+ group 14
+ lifetime 86400
+exit
+
+crypto isakmp key ClaveSecreta2025 address 192.168.145.148
+
+crypto ipsec transform-set TSET esp-des esp-sha-hmac
+ mode tunnel
+exit
+
+crypto map CMAP_VPN 10 ipsec-isakmp
+ set peer 192.168.145.148
+ set transform-set TSET
+ match address ACL_VPN_INTERESANTE
+exit
+
+interface GigabitEthernet0/1
+ crypto map CMAP_VPN
+exit
+
+end
+write memory

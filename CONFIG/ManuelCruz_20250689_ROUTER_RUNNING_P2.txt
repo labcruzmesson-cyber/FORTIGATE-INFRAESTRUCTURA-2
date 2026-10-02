@@ -1,0 +1,174 @@
+R1-CISCO#show running-config
+Building configuration...
+
+Current configuration : 3928 bytes
+!
+! Last configuration change at 22:29:27 UTC Fri Oct 2 2026
+!
+version 15.6
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R1-CISCO
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+ethernet lmi ce
+!
+!
+!
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+ip dhcp excluded-address 10.25.6.1 10.25.6.9
+!
+ip dhcp pool VLAN10_USERS
+ network 10.25.6.0 255.255.255.128
+ default-router 10.25.6.1
+ dns-server 8.8.8.8
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+crypto isakmp policy 10
+ authentication pre-share
+ group 14
+crypto isakmp key ClaveSecreta2025 address 192.168.145.148
+!
+!
+crypto ipsec transform-set TSET esp-des esp-sha-hmac
+ mode tunnel
+!
+!
+!
+crypto map CMAP_VPN 10 ipsec-isakmp
+ set peer 192.168.145.148
+ set transform-set TSET
+ match address ACL_VPN_INTERESANTE
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ no ip address
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/0.10
+ encapsulation dot1Q 10
+ ip address 10.25.6.1 255.255.255.128
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface GigabitEthernet0/1
+ ip address 192.168.145.150 255.255.255.0
+ ip nat outside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+ media-type rj45
+ crypto map CMAP_VPN
+!
+interface GigabitEthernet0/2
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/3
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+ media-type rj45
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip nat inside source list ACL_NAT interface GigabitEthernet0/1 overload
+ip route 0.0.0.0 0.0.0.0 192.168.145.1
+!
+ip access-list extended ACL_NAT
+ deny   ip 10.25.6.0 0.0.0.127 172.25.6.0 0.0.0.15
+ permit ip 10.25.6.0 0.0.0.127 any
+ip access-list extended ACL_VPN_INTERESANTE
+ permit ip 10.25.6.0 0.0.0.127 172.25.6.0 0.0.0.15
+!
+!
+!
+!
+control-plane
+!
+banner exec ^C
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************^C
+banner incoming ^C
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************^C
+banner login ^C
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************^C
+!
+line con 0
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+no scheduler allocate
+!
+end
+
